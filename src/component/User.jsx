@@ -6,21 +6,37 @@ import { useHistory } from "react-router";
 const User = () => {
     const [username, setUsername] = useState()
     const [password, setPassword] = useState()
-    const history = useHistory();
+    const [toggle, setToggle] = useState(false);
+    const [ldata, setLdata] = useState()
+    
+    
+
+
+    const handleChange = (e) => {
+        setPassword(e.target.value);
+        // passwordValue = e.target.value;
+        setLdata(e.target.value);
+        
+     
+    }
+
+    const logout = () => {
+        setToggle(!toggle);
+        setPassword(ldata);
+        
+
+    }
     const login = () => {
 
+        setToggle(!toggle);
         
-        if (username === 'admin' & password === 'admin') {
-             history.push('/home')
-        } else {
-            alert('wrong credentials')
-
-        }
+        setPassword(' ');
+        
     }
 
     return (
         <>
-            <form className="container">
+            <div className="container">
                 <label for="username">UserName:</label>
                 <input
                     className="form-control"
@@ -32,18 +48,19 @@ const User = () => {
                 />
                 <br />
 
-                <label for="password">Password:</label>
+                <label for="password">{toggle ? 'new  Password' : ' password '}</label>
                 <input
                     className="form-control"
                     type='text'
                     id="password"
                     name="password"
                     value={password}
-                    onChange={(evt) => setPassword(evt.target.value)}
+                    onChange={handleChange}
                 />
-                <button className="btn btn-primary mt-5 " type="submit" onClick={login}>Login</button>
+                <button className="btn btn-primary mt-5 " onClick={login}>{toggle ? 'SavePassword' : ' change password '}</button>
+                <button className="btn btn-primary mt-5  ml-5  pull-right" onClick={logout}>Log out</button>
 
-            </form>
+            </div>
         </>
     )
 

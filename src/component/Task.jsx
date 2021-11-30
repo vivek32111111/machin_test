@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import {nanoid} from "nanoid";
 
 const Task = () => {
-    const [todos, setTodos] = useState([])
-    
+    const [todos, setTodos] = useState([]);
+
 
     useEffect(() => {
         fetch('http://jsonplaceholder.typicode.com/todos')
@@ -10,42 +11,75 @@ const Task = () => {
             .then(data => {
                 setTodos(data)
             })
-    }, [])
-    const arr = todos;
-    const [newdata, setNewdata] = useState(arr);
-   
-    console.log(arr.length)
-    console.log(`data : ${arr}`)
+    }, []);
 
-     
-    const deleteTodo = (index)  => {
-        const array = arr
-       const del = arr.splice(index, 1)
-      console.log(index);
-      console.log(`newData : ${arr}`);
+ 
+    const deleteTodo = (index) => {
+        const newTodo = todos.filter(todo => todo.id !== index);
+        
+        setTodos(newTodo);
+        console.log(`newLength : ${todos.length}`);
+    }
+   const [title, setTitle] = useState(' ');
+   const [complete, setComplete] = useState('')
+    // const [addFormData, setAddFormData] = useState({
+    //     title: ' ',
+    //     completed : ' '
+
+    // })
+    const addData = {title : title, completed : complete};
+    console.log(addData);
+    const newHandleform = (event) =>{
+        event.preventDefault();
+        setComplete(event.target.value);
+        console.log(complete);
+    }
+    const handleAddFormChange = (event) => {
+        event.preventDefault();
+        setTitle(event.target.value);
+        console.log(title);
+    };
+    const handleAddFormSubmit = (event) => {
+        // event.preventDefault();
+        // const newContact = {
+            
+        //     title : addFormData.title,
+        //     completed : addFormData.completed
+        // };
+        // const newContacts = [...todos, newContact];
+        const data = [...todos].push(addData);
+        
+        setTodos(data);
+        console.log(data);
         
     }
-    useEffect(()=>{
-        setNewdata(arr)
-    } ,[])
-  
+
     return (
         <div className='container'>
             <table className='table'>
-                <tbody>
-                    {arr.map((key , value) => (
-                        <tr >
-                            <td>{arr[value].id}</td>
-                            <td>{arr[value].title}</td>
-                            <td>{`${arr[value].completed}`}</td>
-                            <button class='btn btn-danger ' onClick={() => deleteTodo(arr[value].id)}> Delete </button>
+                
+                    {todos.map((value, index) => (
+                        <tr key={index}>
+                            <td>{value.id}</td>
+                            <td>{value.title}</td>
+                            <td>{value.completed.toString()}</td>
+                            {/* <td>{todos[value].title}</td>
+                            <td>{`${todos[value].completed}`}</td> */}
+                            <td>
+                                <button className='btn btn-danger ' onClick={() => deleteTodo(value.id)}> Delete </button>
+                            </td>
 
                         </tr>
                     ))}
-                </tbody>
+                
             </table>
-            <button class='btn btn-primary'>Add Task</button>
+            <form>
+                
+                <input type="text" name="title " require=" " onChange={newHandleform} />
+                <input type="text" name="complete " require=" " onChange={handleAddFormChange} />
+            </form>
+            <button className='btn btn-primary mt-3' onClick={handleAddFormSubmit} >Add Task</button>
         </div>
-    )
+    );
 }
 export default Task;
